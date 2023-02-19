@@ -1,5 +1,7 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { openMenu } from '../../features/menuSlice';
+
 import {
 	Bars3Icon,
 	UserIcon,
@@ -8,12 +10,11 @@ import {
 } from '@heroicons/react/24/outline';
 
 const TopBar = () => {
-	const [menuOpen, setMenuOpen] = useState(true);
-	console.log(menuOpen);
+	const dispatch = useDispatch();
 	return (
 		<div className='flex items-center justify-around py-4'>
 			<Bars3Icon
-				onClick={() => setMenuOpen(!menuOpen)}
+				onClick={() => dispatch(openMenu())}
 				className='w-6 cursor-pointer'
 			/>
 			<h1>
