@@ -1,19 +1,25 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
 	Bars3Icon,
 	UserIcon,
 	ChevronRightIcon,
 	ShoppingCartIcon,
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
 
 const TopBar = () => {
+	const [menuOpen, setMenuOpen] = useState(true);
+	console.log(menuOpen);
 	return (
 		<div className='flex items-center justify-around py-4'>
-			<Bars3Icon className='w-6 cursor-pointer' />
+			<Bars3Icon
+				onClick={() => setMenuOpen(!menuOpen)}
+				className='w-6 cursor-pointer'
+			/>
 			<h1>
 				<Link to={'/'}>Amazon.fr</Link>
 			</h1>
-			<Link to='/' className='flex items-center'>
+			<Link to='/connect' className='flex items-center'>
 				<p className='text-xs'>Se connecter</p>
 				<ChevronRightIcon className='w-3' />
 				<UserIcon className='w-7' />
