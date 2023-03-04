@@ -1,12 +1,68 @@
 import { Link } from 'react-router-dom';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TOS from './TOS';
+
+import { auth, db } from '../../utils/firebase-config';
+import {
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
+} from 'firebase/auth';
+import { doc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
 
 const Connect = () => {
 	const [openRegisterMenu, setOpenRegisterMenu] = useState(false);
 	const [openLoginMenu, setOpenLoginMenu] = useState(true);
-	console.log(openRegisterMenu);
+
+	const [registerMail, setRegisterMail] = useState('');
+	const [registerPassword, setRegisterPassword] = useState('');
+	const [loginMail, setLoginMail] = useState('');
+	const [loginPassword, setLoginPassword] = useState('');
+	const [displayName, setDisplayName] = useState('');
+
+	const registerUser = async () => {
+		let userCredential;
+		try {
+			userCredential = await createUserWithEmailAndPassword(
+				auth,
+				registerMail,
+				registerPassword
+			);
+			console.log(userCredential);
+		} catch (error) {
+			console.error(error);
+		}
+
+		try {
+			let user = userCredential.user;
+			let userDocRef = doc(db, 'users', user.uid);
+			let userDocData = {
+				uid: user.uid,
+				email: registerMail,
+				displayName,
+				createdAt: serverTimestamp(),
+			};
+			await setDoc(userDocRef, userDocData);
+			console.log('Document created');
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const loginUser = async () => {
+		try {
+			let userCredential = await signInWithEmailAndPassword(
+				auth,
+				loginMail,
+				loginPassword
+			);
+			let user = userCredential.user;
+			if (user) {
+				console.log(`Logged in as uid: ${user.uid}, email: ${user.email}`);
+			}
+		} catch (error) {}
+	};
+
 	return (
 		<div>
 			<h2 className='text-3xl mb-2'>Bienvenue</h2>
@@ -27,34 +83,37 @@ const Connect = () => {
 					</div>
 					{openRegisterMenu && (
 						<>
-							<form className='space-y-2 mb-4'>
+							<div className='space-y-2 mb-4'>
 								<div>
 									<p className='font-semibold'>Prénom et nom</p>
 									<input
 										type='text'
+										onChange={(e) => setDisplayName(e.target.value)}
 										className=' border-2 w-full p-2 rounded-sm'
 									/>
 								</div>
 								<div>
-									<p className='font-semibold'>
-										Numero de telephone portable ou adresse e-mail
-									</p>
+									<p className='font-semibold'>Adresse e-mail</p>
 									<input
-										type='email || tel  '
+										type='email'
 										className=' border-2 w-full p-2 rounded-sm'
+										onChange={(e) => setRegisterMail(e.target.value)}
 									/>
 								</div>
 								<div>
 									<p className='font-semibold'>Créer un mot de passe</p>
 									<input
-										type='text'
+										type='password'
 										className=' border-2 w-full p-2 rounded-sm'
+										onChange={(e) => setRegisterPassword(e.target.value)}
 									/>
 								</div>
-								<button className='bg-orange-500 w-full p-3 rounded-md border border-gray-400'>
+								<button
+									onClick={registerUser}
+									className='bg-orange-500 w-full p-3 rounded-md border border-gray-400'>
 									Continuer
 								</button>
-							</form>
+							</div>
 
 							<TOS purpose={'creation'} />
 
@@ -82,19 +141,27 @@ const Connect = () => {
 					</div>
 					{openLoginMenu && (
 						<>
-							<form className='space-y-2 mb-4'>
-								<div>
-									<p className='font-semibold'>Email ou numero de telephone</p>
+							<div>
+								<div className='space-y-2 mb-4'>
+									<p className='font-semibold'>Adresse e-mail</p>
 									<input
-										type='email || tel'
+										type='email'
+										onChange={(e) => setLoginMail(e.target.value)}
 										className=' border-2 w-full p-2 rounded-sm'
 									/>
+									<p className='font-semibold'>Mot de passe</p>
+									<input
+										type='password'
+										onChange={(e) => setLoginPassword(e.target.value)}
+										className=' border-2 w-full p-2 rounded-sm'
+									/>
+									<button
+										onClick={loginUser}
+										className='bg-orange-500 w-full p-3 rounded-md border border-gray-400'>
+										Continuer
+									</button>
 								</div>
-
-								<button className='bg-orange-500 w-full p-3 rounded-md border border-gray-400'>
-									Continuer
-								</button>
-							</form>
+							</div>
 							<TOS purpose={'connect'} />
 						</>
 					)}

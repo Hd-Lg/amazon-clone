@@ -26,10 +26,12 @@ const TopBar = () => {
 				<UserIcon className='w-7' />
 			</Link>
 			<div className='relative flex'>
-				<ShoppingCartIcon className='w-8 z-0' />
-				<span className='absolute text-xs -top-2 left-4 z-10 bg-orange-500 px-2 rounded-full'>
-					5
-				</span>
+				<Link to={'/cart'}>
+					<ShoppingCartIcon className='w-8 z-0' />
+					<span className='absolute text-xs -top-2 left-4 z-10 bg-orange-500 px-2 rounded-full'>
+						5
+					</span>
+				</Link>
 			</div>
 		</div>
 	);
