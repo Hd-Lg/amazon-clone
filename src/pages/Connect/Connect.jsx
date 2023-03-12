@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TOS from './TOS';
 
 import { auth, db } from '../../utils/firebase-config';
@@ -8,7 +8,10 @@ import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp, onSnapshot } from 'firebase/firestore';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Connect = () => {
 	const [openRegisterMenu, setOpenRegisterMenu] = useState(false);
@@ -167,6 +170,7 @@ const Connect = () => {
 					)}
 				</div>
 			</div>
+			<ToastContainer />
 		</div>
 	);
 };

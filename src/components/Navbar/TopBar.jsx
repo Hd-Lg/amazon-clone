@@ -20,7 +20,7 @@ const TopBar = () => {
 			<h1>
 				<Link to={'/'}>Amazon.fr</Link>
 			</h1>
-			<Link to='/connect' className='flex items-center'>
+			<Link to='/profile' className='flex items-center'>
 				<p className='text-xs'>Se connecter</p>
 				<ChevronRightIcon className='w-3' />
 				<UserIcon className='w-7' />

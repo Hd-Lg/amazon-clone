@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
 					<MobileMenu />
 				</div>
 			)}
-			<div className='h-screen p-4'>{children}</div>
+			<div className='h-full p-4'>{children}</div>
 			<Footer />
 		</div>
 	);
